@@ -15,6 +15,7 @@ The first four stages produce a durable draft. Do not post to GitHub until the u
 
 - Pin every review to a PR head SHA.
 - Review from an isolated clean worktree. Do not switch, reset, clean, or modify the user's main checkout.
+- Write the draft under `$TMPDIR` (else `/tmp`), unless local guidance names a different temp or review-record directory. Chat gets only that path and the verdict.
 - Review only changes owned by this PR.
 - Judge code on two separate axes: repository standards and the originating spec.
 - Check current context, not only what existed when the PR opened.
@@ -50,7 +51,7 @@ Look for a review-record location in repository guidance and existing review fil
 - Earlier `Not raised` decisions and cross-PR notes.
 - Any existing unposted draft for the current head.
 
-Do not create a duplicate draft for a head already reviewed unless the user asks. Do not use `/tmp` for durable review records. If no durable location is configured or established, ask the user where records should live.
+Do not create a duplicate draft for a head already reviewed unless the user asks. Prefer a review-record or temp path named in repository guidance. Otherwise write to `${TMPDIR:-/tmp}/<repo>-pr<nr>-<short-sha>-review.md`.
 
 ### Classify re-review movement
 
@@ -185,6 +186,8 @@ Stack order, retargeting, rebase work, and upstream approval are not enough by t
 
 ## Stage 5: Write the durable draft
 
+Write this content to `${TMPDIR:-/tmp}/<repo>-pr<nr>-<short-sha>-review.md`, or to the temp/review-record directory named in local guidance. Then stop. In chat, give only the file path and verdict. Do not post during the same step.
+
 Use this header:
 
 ```markdown
@@ -219,8 +222,6 @@ Name replies as `A<n> - reply to <comment/thread id> (<topic>, <file:line>)`. St
 Name new comments as `B<n> - <file:line> - <blocking status>`.
 
 Record the worktree path, exact head, checks, limits, thread plan, and GitHub event in the draft-only evidence section.
-
-Then stop and give the draft to the user. Do not post during the same step.
 
 ## NeverOff voice and format
 
@@ -355,7 +356,7 @@ Keep the record for later review rounds.
 - Verdict matches the actual merge stance.
 - Body and inline labels match.
 - Posted prose contains conclusions, not audit narration.
-- Draft exists in the durable record location.
+- Draft exists in the resolved temp path.
 - Nothing was posted before approval.
 - Every GitHub write used a fresh head/state check.
 - Post state, pending reviews, and threads were verified.
